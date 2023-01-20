@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    
+    @State private var offsetValue : CGSize = .zero
     @State private var animatedValue:Bool = false
     @State private var scaleEffectValue:CGFloat = 1
     var body: some View {
@@ -19,8 +19,8 @@ struct ContentView: View {
                     .cornerRadius(10)
                     .aspectRatio(contentMode: .fit)
                     .padding()
-                    
                     .scaleEffect(scaleEffectValue)
+                    .offset(x: offsetValue.width, y: offsetValue.height)
                     .gesture(TapGesture(count: 2).onEnded({ Void in
                         if scaleEffectValue == 1 {
                             withAnimation(.spring()) {
@@ -29,6 +29,21 @@ struct ContentView: View {
                         }else{
                             withAnimation(.spring()) {
                                 scaleEffectValue = 1
+                                offsetValue = .zero
+                            }
+                        }
+                    })
+                    )
+                    .gesture(DragGesture().onChanged({ value in
+                       let dragOffset = value.translation
+                        withAnimation(.linear(duration: 1)) {
+                            offsetValue = dragOffset
+                        }
+                    }).onEnded({ _ in
+                        if scaleEffectValue <= 1 {
+                            withAnimation(.linear(duration: 1)) {
+                                scaleEffectValue = 1
+                                offsetValue = .zero
                             }
                         }
                     })
