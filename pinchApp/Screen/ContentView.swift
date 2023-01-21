@@ -35,7 +35,7 @@ struct ContentView: View {
                     })
                     )
                     .gesture(DragGesture().onChanged({ value in
-                       let dragOffset = value.translation
+                        let dragOffset = value.translation
                         withAnimation(.linear(duration: 1)) {
                             offsetValue = dragOffset
                         }
@@ -47,7 +47,21 @@ struct ContentView: View {
                             }
                         }
                     })
-                    )
+                    ).gesture(MagnificationGesture().onChanged({ value in
+
+                        if scaleEffectValue >= 1 && scaleEffectValue <= 5 {
+                            scaleEffectValue = value
+                        } else if scaleEffectValue > 5 {
+                            scaleEffectValue = 5
+                        }else {
+                            withAnimation(.easeOut(duration: 1)) {
+                                scaleEffectValue = 1
+                            }
+                          
+                        }
+                    }))
+                
+                
             }
             .navigationTitle("Pich App")
             .navigationBarTitleDisplayMode(.inline)
